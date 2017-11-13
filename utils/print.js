@@ -34,12 +34,12 @@ function fixempty(str, len, tag) {
 
 function commonPrint() {
     console.info('');
-    console.info('===================== BM 开发工具 ====================');
+    console.info('===================== eros-cli ====================');
     console.info('');
 }
 
 function title(config) {
-    console.info(' ' + (fixempty(config.name, 15)) + ' # ' + (config.explain || ''));
+    console.info(' ' + (fixempty(config.name, 10)) + ' | ' + (config.explain || ''));
 }
 
 function info(_info) {
@@ -50,12 +50,12 @@ function info(_info) {
 
 function command(config) {
     commonPrint();
-    console.info(' 命令：' + config.name);
-    console.info(' 说明：' + config.explain);
+    console.info(' name: ' + config.name);
+    console.info(' desc: ' + config.explain);
     console.info(' ');
-    console.info(' 执行：' + config.command);
+    console.info(' run: ' + config.command);
     console.info(' ');
-    console.info(' 参数：');
+    console.info(' params: ');
     config.options.map(function(item) {
         console.info(' ' + item.keys.join('，') + '  ' + item.describe);
     })
