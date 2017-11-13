@@ -1,0 +1,74 @@
+<script>
+    window._MONITOR = {
+        url: '@monitorUrl@',
+        monitorName: '@monitorName@',
+        getSourceStartTime: +new Date() - window._getSourceStartTime,
+        performance: function(){
+            var perf = (window.webkitPerformance ? window.webkitPerformance : window.msPerformance),
+                points = [{
+                    key: 'fetchStart',
+                    alias: '浏览器 Ready',
+                    time: 0
+                }, {
+                    key: 'domComplete',
+                    alias: '白屏时间',
+                    time: 0
+                }, {
+                    key: 'loadEventEnd',
+                    alias: '用户可操作时间',
+                    time: 0
+                }];
+            perf = perf ? perf : window.performance || {};
+            var timing = perf.timing;
+            if (perf && timing) {
+                var navigationStart = timing['navigationStart'];
+                for (var i = 0, l = points.length; i < l; i++) {
+                    points[i]['time'] = timing[points[i]['key']] - navigationStart;
+                }
+            }
+            for(var i in points){
+                if(points[i]['time']){
+                    this.sendMoniter(points[i]['key'], points[i]['alias'], points[i]['time']);
+                }
+            }
+        },
+        createXMLHttpRequest: function(){
+            var xmlHttp;
+            if (window.XMLHttpRequest) {
+                xmlHttp = new XMLHttpRequest();
+                if (xmlHttp.overrideMimeType)
+                    xmlHttp.overrideMimeType('text/xml');
+            } else if (window.ActiveXObject) {
+                try {
+                    xmlHttp = new ActiveXObject("Msxml2.XMLHTTP");
+                } catch (e) {
+                    try {
+                        xmlHttp = new ActiveXObject("Microsoft.XMLHTTP");
+                    } catch (e) {
+                    }
+                }
+            }
+            return xmlHttp;
+        },
+        sendMoniter: function(key, alias, time){
+            var xmlHttp = this.createXMLHttpRequest(),
+                data = {
+                    app: 'fe_monitor',
+                    name: key,
+                    alias: alias || '',
+                    metricType: 'TIMER',
+                    host: this.monitorName,
+                    tags: {},
+                    val: time
+                };
+            xmlHttp.open("POST", this.url, true);
+            xmlHttp.setRequestHeader("Content-Type", "application/json;charset=UTF-8");
+            xmlHttp.send(JSON.stringify(data));
+        }
+    }
+
+    setTimeout(function(){
+        window._MONITOR.sendMoniter('sourceReady', '资源加载', window._MONITOR.getSourceStartTime);
+        window._MONITOR.performance();
+    }, 5000);
+</script>
