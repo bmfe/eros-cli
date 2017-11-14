@@ -34,7 +34,7 @@ function fixempty(str, len, tag) {
 
 function commonPrint() {
     console.info('');
-    console.info('===================== eros-cli ====================');
+    console.info('eros-cli:');
     console.info('');
 }
 
