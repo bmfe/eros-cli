@@ -45,8 +45,8 @@ function getIconfontMd5() {
             iOS: versionInfo.iOS,
             page: filePath.slice(indexTag).split(path.sep).join('/'),
             md5: crypto.createHash('md5').update(content, 'utf8').digest('hex')
-        });            
-        
+        });
+
         cb(null, file);
     }, function(cb) {
         cb();
@@ -67,7 +67,7 @@ function addFramework(framework) {
         var filePath = file.history[0],
             indexTag = filePath.indexOf(pagesTag) + pagesTag.length,
             content = file.contents.toString('utf8'),
-            text = (content.indexOf(framework) > -1 ? '' : framework ) + content;
+            text = (content.indexOf(framework) > -1 ? '' : framework) + content;
 
 
         file.contents = new Buffer(text);
@@ -100,13 +100,7 @@ function makeDiffZip(jsVersion) {
             if (message.type === 'done') {
                 n.kill();
                 shell.cp('dist/js/' + jsVersion + '.zip', path.resolve(zipFolder, appName));
-                // Process.exec('cp dist/js/' + jsVersion + '.zip' + ' ' + path.resolve(zipFolder, appName), function(error, stdout, stderr) {
-                //     if (error !== null) {
-                //         print.info('exec error: ' + error);
-                //         return;
-                //     }
-                    print.info('发布成功');
-                // })
+                print.info('发布成功');
             }
         })
         n.send({
@@ -121,37 +115,29 @@ function writeJson(jsVersion) {
         jsPath = process.cwd() + '/dist/js/',
         tmpJsPath = process.cwd() + '/dist/_js/';
 
-        shell.mkdir('-p', tmpJsPath);
-        shell.cp('-r', process.cwd() + '/dist/js/**/*.zip', tmpJsPath);
-        shell.rm('-rf', jsPath);
-        fs.rename(tmpJsPath, jsPath);
-    // Process.exec('cd dist/js && ls | grep -v .zip | xargs rm -rf', function(error, stdout, stderr) {
-        // if (error !== null) {
-            // print.info('exec error: ' + error);
-            // return;
-        // }
-        // }
-        if (requestUrl) {
-            __request.post(requestUrl, {
-                form: versionInfo
-            }, function(error, response, body) {
-                if (!error && response.statusCode == 200) {
-                    makeDiffZip(jsVersion);
-                } else {
-                    print.info('发布失败:' + body);
-                }
-            });
-        } else {
-            jsonfile.writeFile(file, versionInfo, function(err) {
-                if (err) {
-                    print.info('min-weex-json-error', err);
-                } else {
-                    makeDiffZip(jsVersion);
-                }
-            });
-        }
-
-    // });
+    shell.mkdir('-p', tmpJsPath);
+    shell.cp('-r', process.cwd() + '/dist/js/**/*.zip', tmpJsPath);
+    shell.rm('-rf', jsPath);
+    fs.rename(tmpJsPath, jsPath);
+    if (requestUrl) {
+        __request.post(requestUrl, {
+            form: versionInfo
+        }, function(error, response, body) {
+            if (!error && response.statusCode == 200) {
+                makeDiffZip(jsVersion);
+            } else {
+                print.info('发布失败:' + body);
+            }
+        });
+    } else {
+        jsonfile.writeFile(file, versionInfo, function(err) {
+            if (err) {
+                print.info('min-weex-json-error', err);
+            } else {
+                makeDiffZip(jsVersion);
+            }
+        });
+    }
 }
 
 function minWeex(isWeexEros, platform) {
@@ -181,9 +167,9 @@ function minWeex(isWeexEros, platform) {
 }
 
 function weexErosHandler(jsVersion, platform) {
-    if(!platform) {
+    if (!platform) {
         console.log('platform不存在'.red)
-        return 
+        return
     }
 
     var params = {
