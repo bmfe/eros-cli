@@ -24,8 +24,7 @@ function readAllConfig() {
 
         CONFIG = _.assign({
             weex: true,
-            appName: erosConfig.appName, 
-            zipFolder: erosConfig.zipFolder.server, 
+            appName: erosConfig.appName,
             localZipFolder: erosConfig.zipFolder,
             version: erosConfig.version,
             framework: '// { "framework": "Vue" }\n',

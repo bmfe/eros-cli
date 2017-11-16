@@ -1,9 +1,12 @@
 /*
  * @Author: Zero 
  * @Date: 2017-11-14 10:43:06 
- * @Last Modified by:   Zero 
- * @Last Modified time: 2017-11-14 10:43:06 
+ * @Last Modified by: Zero
+ * @Last Modified time: 2017-11-16 18:48:18
  */
+# 2.0.0-beta.4
+* 优化差分包逻辑，增加webpack输出提示。
+
 # 2.0.0-beta.2
 * 新增eros update
 

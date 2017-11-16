@@ -14,8 +14,9 @@ var fs = require('fs'),
     jsonfile = require('jsonfile'),
     zipFolder = require('zip-folder'),
     Process = require('child_process'),
-    print = require('../print'),
+    logger = require('../logger'),
     argv = require('yargs').argv,
+    exists = require('fs').existsSync,
     weexErosPack = require('./weexErosPack');
 
 var readConfig = require('../readConfig'),
@@ -24,6 +25,7 @@ var readConfig = require('../readConfig'),
 var versionMap = [],
     pagesTag = path.sep + 'dist' + path.sep + "js",
     iconfontTag = path.sep + 'iconfont' + path.sep,
+    assetsTag = path.sep + 'assets' + path.sep,
     appName = readConfig.get('appName'),
     versionInfo = readConfig.get('version');
 
@@ -39,6 +41,32 @@ function getIconfontMd5() {
         }
         var filePath = file.history[0],
             indexTag = filePath.indexOf(iconfontTag),
+            content = file.contents.toString('utf8');
+        versionMap.push({
+            android: versionInfo.android,
+            iOS: versionInfo.iOS,
+            page: filePath.slice(indexTag).split(path.sep).join('/'),
+            md5: crypto.createHash('md5').update(content, 'utf8').digest('hex')
+        });
+
+        cb(null, file);
+    }, function(cb) {
+        cb();
+    });
+}
+
+function getAssetsMd5() {
+    return through.obj(function(file, enc, cb) {
+        if (file.isStream()) {
+            this.emit('error', new gutil.PluginError('gulp-debug', 'Streaming not supported'));
+            return cb();
+        }
+
+        if (!file.contents) {
+            return cb();
+        }
+        var filePath = file.history[0],
+            indexTag = filePath.indexOf(assetsTag),
             content = file.contents.toString('utf8');
         versionMap.push({
             android: versionInfo.android,
@@ -93,14 +121,24 @@ function getMd5Version() {
 }
 
 function makeDiffZip(jsVersion) {
-    var zipFolder = readConfig.get('zipFolder');
-    if (zipFolder && (argv.d || argv.diff)) {
-        var n = Process.fork(path.resolve(__dirname, './diffFile.js'));
+    var zipFolder = readConfig.get('diff').pwd;
+
+    if (argv.d || argv.diff || argv.s || argv.send) {
+        var targetPath = path.resolve(zipFolder, appName),
+            n = Process.fork(path.resolve(__dirname, './diffFile.js'));
+
+        if (!exists(targetPath)) {
+            shell.mkdir('-p', targetPath)
+        }
         n.on('message', function(message) {
             if (message.type === 'done') {
                 n.kill();
-                shell.cp('dist/js/' + jsVersion + '.zip', path.resolve(zipFolder, appName));
-                print.info('发布成功');
+                shell.cp('dist/js/' + jsVersion + '.zip', targetPath);
+                logger.success('publish success!');
+                logger.sep();
+                logger.log('app name: %s', appName);
+                logger.log('app zip md5: %s', jsVersion);
+                logger.log('zip saved path: %s', targetPath);
             }
         })
         n.send({
@@ -126,13 +164,13 @@ function writeJson(jsVersion) {
             if (!error && response.statusCode == 200) {
                 makeDiffZip(jsVersion);
             } else {
-                print.info('发布失败:' + body);
+                logger.fatal('eros publish fail: %s', error);
             }
         });
     } else {
         jsonfile.writeFile(file, versionInfo, function(err) {
             if (err) {
-                print.info('min-weex-json-error', err);
+                logger.fatal('generate eros json error: %s', err);
             } else {
                 makeDiffZip(jsVersion);
             }
@@ -148,7 +186,7 @@ function minWeex(isWeexEros, platform) {
     versionInfo['appName'] = appName;
     versionInfo['jsVersion'] = jsVersion;
     versionInfo['timestamp'] = timestamp;
-    versionInfo['jsPath'] = readConfig.get('jsPath');
+    versionInfo['jsPath'] = readConfig.get('diff')['proxy'];
 
 
     jsonfile.writeFileSync(md5File, _.assign({
@@ -158,7 +196,7 @@ function minWeex(isWeexEros, platform) {
 
     zipFolder(path.resolve(process.cwd(), 'dist/js/_pages/'), path.resolve(process.cwd(), 'dist/js/' + jsVersion + '.zip'), function(err) {
         if (err) {
-            console.log('min-weex-zip-error', err);
+            logger.fatal('generate eros json error: %s', err);
         } else {
             isWeexEros && weexErosHandler(jsVersion, platform)
             writeJson(jsVersion);
@@ -168,7 +206,7 @@ function minWeex(isWeexEros, platform) {
 
 function weexErosHandler(jsVersion, platform) {
     if (!platform) {
-        console.log('platform不存在'.red)
+        logger.fatal('platform not exited')
         return
     }
 
@@ -189,5 +227,6 @@ function weexErosHandler(jsVersion, platform) {
 module.exports = {
     minWeex: minWeex,
     addFramework: addFramework,
+    getAssetsMd5: getAssetsMd5,
     getIconfontMd5: getIconfontMd5
 }
