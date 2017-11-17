@@ -24,21 +24,33 @@ The following instructions are provided to help you build app !
  dev        | start dev server.
  init       | generate eros template.
  install    | install eros platform and components' librarys.
- mock       | start a mock server.
  pack       | pack full dose zip and send to eros platform project.
  update     | update eros-template file by path.
+ mock       | start a mock server.
 ```
 
 ## Command
-**build**: 
+#### **build**: 
 
-eros cli build prod's zip, contain js bundle, assets/images and iconfont. 
+eros cli build prod's full zip, contain js bundle, assets/images and iconfont. 
 ```
 $ eros build
 ```
-**dev**:
+build full zip and copy to specified path, post full zip info to your server, you can use [eros-publish](https://github.com/bmfe/eros-publish) for collocation.
+```
+$ eros build -s url
+```
+build full zip and copy to specified path, generate full zip and diff zip in  [eros-template](https://github.com/bmfe/eros-template)'s dist folder.
+```
+$ eros build -d
+```
+build full zip and copy to specified path, generate full zip and diff zip in  [eros-template](https://github.com/bmfe/eros-template)'s dist folder， post full zip info to your server at same time.
+```
+$ eros build -s url -d
+```
+#### **dev**:
 
-start dev server, eros' app can refresh current view when your local code is changed and saved, **You can debug by forward agent software in real machine.**
+start dev server, you can change default `server.path` and `server.port` in `eros-template/config/eros.dev.js`, eros' app can refresh current view when your local code is changed and saved, **You can debug by forward agent software in real machine.**
 
 forward agent software recommand:
 
@@ -48,29 +60,31 @@ forward agent software recommand:
 ```
 $ eros dev
 ```
-**init**:
+#### **init**:
 
 generate [eros-template](https://github.com/bmfe/eros-template) in current execution directory, you can quickly build your app through
  it.
 ```
 $ eros init
 ```
-**install**
+#### **install**
 
 eros developed many functions based on weex (self-module), you don't have to worry about the version of the weex update, we will update weex in time, every time we have a change ( new module / bugfix / weex update and so on), you can install them to use it.
 ```
 $ eros install
 ```
-**mock**
-```
-$ eros mock
-```
-**pack**
+#### **pack**
+build prod's full zip and send it to platforms's ios/android built-in package storage path.
 ```
 $ eros pack
 ```
-**update**
+#### **update**
+you can update [eros-template](https://github.com/bmfe/eros-template)'s every file/path when eros-template has updated, **`but your must use it be careful, when the file/path has be changed by yourself that you want to update`**. 
 ```
 $ eros update
 ```
-
+#### **mock**
+start mock server, you can change default `proxy` and `mockServer` in `eros-template/config/eros.dev.js`.
+```
+$ eros mock
+```
