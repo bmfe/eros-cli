@@ -1,4 +1,5 @@
-var path = require('path'),
+var fs = require('fs'),
+    path = require('path'),
     jsonfile = require('jsonfile'),
     shell = require('shelljs');
 
@@ -27,10 +28,34 @@ function iosHandler(params) {
 }
 
 function androidHandler(params) {
- var androidZipTarget = path.resolve(process.cwd(), './platforms/' + readConfig.get('localZipFolder').android);
- 
+ var androidZipTarget = path.resolve(process.cwd(), './platforms/' + readConfig.get('localZipFolder').android),
+     gradlePropertiesPath = path.resolve(process.cwd(), './platforms/android/WeexFrameworkWrapper/gradle.properties'),
+     erosNativeJs = readConfig.get('erosNativeJs');
+
     console.log(); 
     erosConsole('compile done! start to pack.'.green);
+    erosConsole('write -----> gradle.properties');
+    // changeFile(gradlePropertiesPath, '{{UMENG_APPKEY}}', erosNativeJs.umeng.androidAppKey)
+    // changeFile(gradlePropertiesPath, '{{GETUI_APPID}}', erosNativeJs.getui.appId)
+    // changeFile(gradlePropertiesPath, '${GETUI_APPKEY}', erosNativeJs.getui.appKey)
+    // changeFile(gradlePropertiesPath, '${GETTUI_APPSECRET}', erosNativeJs.getui.appSecret)
+    
+    var content = fs.readFileSync(gradlePropertiesPath, 'utf8'),
+    prefix = '#start',
+    endfix = '#end',
+    preIndex = content.lastIndexOf(prefix),
+    endIndex = content.lastIndexOf(endfix) + prefix.length;
+
+    let info = `
+#start
+UMENG_APPKEY=${erosNativeJs.umeng.androidAppKey}
+GETUI_APPID=${erosNativeJs.getui.appId}
+GETUI_APPKEY=${erosNativeJs.getui.appKey}
+GETTUI_APPSECRET=${erosNativeJs.getui.appSecret}
+#end
+`
+    fs.writeFileSync(gradlePropertiesPath, content.slice(0, preIndex).concat(info), 'utf8');    
+
     erosConsole('copy  -----> bundle.zip');
     shell.cp('-r' , params.jsZipPath, androidZipTarget + '/bundle.zip');
     erosConsole('write -----> eros.native.json');
