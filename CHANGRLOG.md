@@ -4,6 +4,9 @@
  * @Last Modified by: Zero
  * @Last Modified time: 2017-11-16 18:48:18
  */
+# 2.0.0-beta.5
+* pack 动态给安卓添加配置信息。
+
 # 2.0.0-beta.4
 * 优化差分包逻辑，增加webpack输出提示。
 
