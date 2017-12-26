@@ -209,7 +209,6 @@ function weexErosHandler(jsVersion, platform) {
         logger.fatal('platform not exited')
         return
     }
-
     var params = {
         jsZipPath: path.resolve(process.cwd(), './dist/js/' + jsVersion + '.zip'),
         erosNative: require(path.resolve(process.cwd(), './config/eros.native.js')),
@@ -217,6 +216,16 @@ function weexErosHandler(jsVersion, platform) {
             filesMd5: versionMap
         }, versionInfo)
     }
+    var _crypt = require('cryptlib'),
+
+	tmp = JSON.stringify(params.erosNative),
+	iv = 'RjatRGC4W72PJXTE', //16 bytes = 128 bit
+	key = _crypt.getHashSha256('eros loves you', 32); //32 bytes = 256 bits
+
+	params.erosNative = _crypt.encrypt(tmp, key, iv);
+
+    console.log('key:',key);
+    console.log('iv:',iv);
 
     platform === 'ALL' && weexErosPack.packIosHandler(params) && weexErosPack.packAndroidHandler(params);
     platform === 'IOS' && weexErosPack.packIosHandler(params);
