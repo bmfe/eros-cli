@@ -1,30 +1,30 @@
 var fs = require('fs'),
     path = require('path'),
     jsonfile = require('jsonfile'),
-    shell = require('shelljs');
+    shell = require('shelljs'),
+    readConfig = require('../readConfig'),
+    logger = require('../logger');
 
-var readConfig = require('../readConfig');
-
-function erosConsole(msg, color) {
- var _color = color || 'white';
-    console.log('['+'eros'.blue+'] ' + msg[_color]);
-}
 
 
 function iosHandler(params) {
  var iosZipTarget = path.resolve(process.cwd(), './platforms/' + readConfig.get('localZipFolder').iOS);
 
-    console.log();
-    erosConsole('compile done! start to pack.'.green);
-    erosConsole('copy  -----> bundle.zip');
+    logger.sep();
+    logger.success('compile done! start to pack.'.green);
+
+    logger.log('copy  -----> bundle.zip');
     shell.cp('-r' , params.jsZipPath, iosZipTarget + '/bundle.zip');
-    erosConsole('write -----> eros.native.json');
+
+    logger.log('write -----> eros.native.json');
     jsonfile.writeFileSync(path.resolve(iosZipTarget, 'eros.native.json'), params.erosNative);
-    erosConsole('write -----> bundle.config');
+
+    logger.log('write -----> bundle.config');
     jsonfile.writeFileSync(path.resolve(iosZipTarget, 'bundle.config'), params.bundleConfig);
-    console.log();
-    erosConsole('packing success!'.green);
-    erosConsole('ios bundle zip has packing to: ' +  iosZipTarget);
+
+    logger.sep();
+    logger.success('packing success!'.green);
+    logger.log('ios bundle zip has packing to: ' +  iosZipTarget);
 }
 
 function androidHandler(params) {
@@ -32,13 +32,9 @@ function androidHandler(params) {
      gradlePropertiesPath = path.resolve(process.cwd(), './platforms/android/WeexFrameworkWrapper/gradle.properties'),
      erosNativeJs = readConfig.get('erosNativeJs');
 
-    console.log(); 
-    erosConsole('compile done! start to pack.'.green);
-    erosConsole('write -----> gradle.properties');
-    // changeFile(gradlePropertiesPath, '{{UMENG_APPKEY}}', erosNativeJs.umeng.androidAppKey)
-    // changeFile(gradlePropertiesPath, '{{GETUI_APPID}}', erosNativeJs.getui.appId)
-    // changeFile(gradlePropertiesPath, '${GETUI_APPKEY}', erosNativeJs.getui.appKey)
-    // changeFile(gradlePropertiesPath, '${GETTUI_APPSECRET}', erosNativeJs.getui.appSecret)
+    logger.sep(); 
+    logger.success('compile done! start to pack.'.green);
+    logger.log('write -----> gradle.properties');
     
     var content = fs.readFileSync(gradlePropertiesPath, 'utf8'),
     prefix = '#start',
@@ -56,15 +52,15 @@ GETTUI_APPSECRET=${erosNativeJs.getui.appSecret}
 `
     fs.writeFileSync(gradlePropertiesPath, content.slice(0, preIndex).concat(info), 'utf8');    
 
-    erosConsole('copy  -----> bundle.zip');
+    logger.log('copy  -----> bundle.zip');
     shell.cp('-r' , params.jsZipPath, androidZipTarget + '/bundle.zip');
-    erosConsole('write -----> eros.native.json');
+    logger.log('write -----> eros.native.json');
     jsonfile.writeFileSync(path.resolve(androidZipTarget, 'eros.native.json'), params.erosNative);     
-    erosConsole('write -----> bundle.config');
+    logger.log('write -----> bundle.config');
     jsonfile.writeFileSync(path.resolve(androidZipTarget, 'bundle.config'), params.bundleConfig);     
-    console.log();
-    erosConsole('packing success!'.green);
-    erosConsole('android bundle zip has packing to: ' +  androidZipTarget);
+    logger.sep();
+    logger.success('packing success!'.green);
+    logger.log('android bundle zip has packing to: ' +  androidZipTarget);
 }
 
 module.exports = {

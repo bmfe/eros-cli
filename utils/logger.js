@@ -1,6 +1,8 @@
 const chalk = require('chalk')
 const format = require('util').format
-
+const through = require('through2')
+const print = require('./print')
+const pretty = require('pretty-hrtime')
 /**
  * Prefix.
  */
@@ -16,7 +18,7 @@ const sep = chalk.gray('·')
 
 exports.log = function(...args) {
     const msg = format.apply(format, args)
-    console.log('[' + chalk.white(prefix) + ']', sep, msg)
+    console.log('[' + chalk.blue(prefix) + ']', sep, chalk.white(msg))
 }
 
 /**
@@ -28,7 +30,7 @@ exports.log = function(...args) {
 exports.fatal = function(...args) {
     if (args[0] instanceof Error) args[0] = args[0].message.trim()
     const msg = format.apply(format, args)
-    console.log('[' + chalk.red(prefix) + ']', sep, msg)
+    console.log('[' + chalk.blue(prefix) + ']', sep, chalk.red(msg))
     process.exit(1)
 }
 
@@ -40,9 +42,35 @@ exports.fatal = function(...args) {
 
 exports.success = function(...args) {
     const msg = format.apply(format, args)
-    console.log('[' + chalk.green(prefix) + ']', sep, msg)
+    console.log('[' + chalk.blue(prefix) + ']', sep, chalk.green(msg))
 }
 
 exports.sep = function() {
     console.log()
 }
+
+exports.time = function(name) {
+ 	let start = process.hrtime(),
+ 		stream = through.obj({
+	        objectMode: true
+	    })
+
+    stream.start = resetStart
+
+    name = '' + name + ': '
+
+    return stream.once('end', function() {
+        let time = pretty(process.hrtime(start)),
+        	msg = print.fixempty(name, 30, '>') + time.magenta
+
+    	console.log('[' + chalk.blue(prefix) + ']', sep, chalk.green(msg))
+    })
+
+    function resetStart() {
+	    start = process.hrtime()
+	}
+
+}
+
+
+

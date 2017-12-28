@@ -178,7 +178,7 @@ function writeJson(jsVersion) {
     }
 }
 
-function minWeex(isWeexEros, platform) {
+function minWeex(platform) {
     var timestamp = +new Date(),
         jsVersion = getMd5Version(),
         md5File = path.resolve(process.cwd(), 'dist/js/_pages/md5.json');
@@ -198,7 +198,7 @@ function minWeex(isWeexEros, platform) {
         if (err) {
             logger.fatal('generate eros json error: %s', err);
         } else {
-            isWeexEros && weexErosHandler(jsVersion, platform)
+            weexErosHandler(jsVersion, platform)
             writeJson(jsVersion);
         }
     });
@@ -216,14 +216,14 @@ function weexErosHandler(jsVersion, platform) {
             filesMd5: versionMap
         }, versionInfo)
     }
-    var _crypt = require('cryptlib'),
-        tmp = JSON.stringify(params.erosNative),
-        iv = 'RjatRGC4W72PJXTE', 
-        key = _crypt.getHashSha256('eros loves you', 32);
+    // 加密
+ //    var _crypt = require('cryptlib'),
+ //        tmp = JSON.stringify(params.erosNative),
+ //        iv = 'RjatRGC4W72PJXTE', 
+ //        key = _crypt.getHashSha256('eros loves you', 32);
 
-	params.erosNative = _crypt.encrypt(tmp, key, iv);
+	// params.erosNative = _crypt.encrypt(tmp, key, iv);
 
-    platform === 'ALL' && weexErosPack.packIosHandler(params) && weexErosPack.packAndroidHandler(params);
     platform === 'IOS' && weexErosPack.packIosHandler(params);
     platform === 'ANDROID' && weexErosPack.packAndroidHandler(params);
 }
