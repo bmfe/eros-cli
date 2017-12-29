@@ -217,12 +217,12 @@ function weexErosHandler(jsVersion, platform) {
         }, versionInfo)
     }
     // 加密
- //    var _crypt = require('cryptlib'),
- //        tmp = JSON.stringify(params.erosNative),
- //        iv = 'RjatRGC4W72PJXTE', 
- //        key = _crypt.getHashSha256('eros loves you', 32);
+    var _crypt = require('cryptlib'),
+        tmp = JSON.stringify(params.erosNative),
+        iv = 'RjatRGC4W72PJXTE', 
+        key = _crypt.getHashSha256('eros loves you', 32);
 
-	// params.erosNative = _crypt.encrypt(tmp, key, iv);
+	params.erosNative = _crypt.encrypt(tmp, key, iv);
 
     platform === 'IOS' && weexErosPack.packIosHandler(params);
     platform === 'ANDROID' && weexErosPack.packAndroidHandler(params);
