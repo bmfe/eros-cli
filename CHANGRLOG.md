@@ -1,9 +1,11 @@
-/*
- * @Author: Zero 
- * @Date: 2017-11-14 10:43:06 
- * @Last Modified by: Zero
- * @Last Modified time: 2017-11-16 18:48:18
- */
+
+# 2.0.0-beta.6
+* 脚手架更新：	加密算法
+* 脚手架更新： 添加tree-shaking
+* 脚手架更新： 精简体积，删除无用代码
+* 脚手架更新： eros update 可选择不再覆盖
+
+
 # 2.0.0-beta.5
 * pack 动态给安卓添加配置信息。
 
