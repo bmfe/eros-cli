@@ -1,3 +1,5 @@
+# 2.0.0-beta.8
+* 删除组件更新
 
 # 2.0.0-beta.7
 * bugfix: 修复 eros init 报错的问题
