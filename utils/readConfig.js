@@ -47,8 +47,12 @@ function get(key) {
     }
 }
 
+function getAllConfig() {
+    return CONFIG || false
+}
 readAllConfig();
 
 module.exports = {
-    get: get
+    get: get,
+    getAllConfig: getAllConfig
 }
