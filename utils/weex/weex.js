@@ -43,8 +43,6 @@ function getIconfontMd5() {
             indexTag = filePath.indexOf(iconfontTag),
             content = file.contents.toString('utf8');
         versionMap.push({
-            android: versionInfo.android,
-            iOS: versionInfo.iOS,
             page: filePath.slice(indexTag).split(path.sep).join('/'),
             md5: crypto.createHash('md5').update(content, 'utf8').digest('hex')
         });
@@ -69,8 +67,6 @@ function getAssetsMd5() {
             indexTag = filePath.indexOf(assetsTag),
             content = file.contents.toString('utf8');
         versionMap.push({
-            android: versionInfo.android,
-            iOS: versionInfo.iOS,
             page: filePath.slice(indexTag).split(path.sep).join('/'),
             md5: crypto.createHash('md5').update(content, 'utf8').digest('hex')
         });
@@ -100,8 +96,6 @@ function addFramework(framework) {
 
         file.contents = new Buffer(text);
         versionMap.push({
-            android: versionInfo.android,
-            iOS: versionInfo.iOS,
             page: filePath.slice(indexTag).split(path.sep).join('/'),
             md5: crypto.createHash('md5').update(text, 'utf8').digest('hex')
         });

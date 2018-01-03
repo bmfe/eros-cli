@@ -1,3 +1,9 @@
+# 2.0.0-beta.12
+* eros pack 没有打包本地静态资源
+
+# 2.0.0-beta.11
+* eros pack 没有打包本地静态资源
+
 # 2.0.0-beta.10
 * eros pack 没有打包本地静态资源
 
