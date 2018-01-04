@@ -1,3 +1,6 @@
+# 2.0.0-beta.13
+* 修复 windows 上报打包解析错误的bug
+
 # 2.0.0-beta.12
 * eros pack 没有打包本地静态资源
 
