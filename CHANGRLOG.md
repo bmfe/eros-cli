@@ -1,3 +1,18 @@
+# 2.0.0-beta.14-16
+* 添加 eslint 编译
+
+# 2.0.0-beta.13
+* 修复 windows 上报打包解析错误的bug
+
+# 2.0.0-beta.12
+* eros pack 没有打包本地静态资源
+
+# 2.0.0-beta.11
+* eros pack 没有打包本地静态资源
+
+# 2.0.0-beta.10
+* eros pack 没有打包本地静态资源
+
 # 2.0.0-beta.9
 * fix 脚手架 dev 报错的问题
 
