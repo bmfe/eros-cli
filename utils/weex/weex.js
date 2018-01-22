@@ -199,10 +199,6 @@ function minWeex(platform) {
 }
 
 function weexErosHandler(jsVersion, platform) {
-    if (!platform) {
-        logger.fatal('platform not exited')
-        return
-    }
     var params = {
         jsZipPath: path.resolve(process.cwd(), './dist/js/' + jsVersion + '.zip'),
         erosNative: require(path.resolve(process.cwd(), './config/eros.native.js')),
@@ -218,6 +214,11 @@ function weexErosHandler(jsVersion, platform) {
 
 	params.erosNative = _crypt.encrypt(tmp, key, iv);
 
+    if (platform === 'ALL') {
+        weexErosPack.packAndroidHandler(params);
+        weexErosPack.packIosHandler(params);
+    }
+    
     platform === 'IOS' && weexErosPack.packIosHandler(params);
     platform === 'ANDROID' && weexErosPack.packAndroidHandler(params);
 }

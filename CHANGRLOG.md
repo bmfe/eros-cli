@@ -1,3 +1,7 @@
+# 2.0.1
+* fix: eros build 会打内置包的情况
+* add: eros pack --all 同时打两端的内置包
+
 # 2.0.0-beta.14-16
 * 添加 eslint 编译
 
