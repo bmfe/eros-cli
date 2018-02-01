@@ -1,3 +1,13 @@
+# 2.0.4
+* fix: eros pack all 失效问题
+* fix: eros pack ios 失效问题
+* fix: eros pack android 失效问题
+
+# 2.0.3
+* add: eros pack all
+* add: eros pack ios
+* add: eros pack android
+
 # 2.0.2
 * add: eros install ios
 * add: eros install android
