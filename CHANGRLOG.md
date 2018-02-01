@@ -1,3 +1,11 @@
+# 2.0.2
+* add: eros install ios
+* add: eros install android
+* add: eros update ios
+* add: eros update android
+* add: eros update template your_path
+* add: eros update widget
+
 # 2.0.1
 * fix: eros build 会打内置包的情况
 * add: eros pack --all 同时打两端的内置包
