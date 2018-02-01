@@ -1,3 +1,8 @@
+# 2.0.3
+* add: eros pack all
+* add: eros pack ios
+* add: eros pack android
+
 # 2.0.2
 * add: eros install ios
 * add: eros install android
