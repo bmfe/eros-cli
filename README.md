@@ -73,15 +73,58 @@ eros developed many functions based on weex (self-module), you don't have to wor
 ```
 $ eros install
 ```
+
+install eros ios sdk.
+```
+$ eros install ios
+```
+install eros android sdk.
+```
+$ eros install android
+```
+install both sdk.
+```
+$ eros install all
+```
 #### **pack**
 build prod's full zip and send it to platforms's ios/android built-in package storage path.
 ```
 $ eros pack
 ```
+
+pack eros ios inner js bundle.
+```
+$ eros pack ios
+```
+pack eros android inner js bundle.
+```
+$ eros pack android 
+```
+pack eros ios && android inner js bundle.
+```
+$ eros pack all
+```
 #### **update**
 you can update [eros-template](https://github.com/bmfe/eros-template)'s every file/path when eros-template has updated, **`but your must use it be careful, when the file/path has be changed by yourself that you want to update`**. 
 ```
 $ eros update
+```
+
+update eros ios sdk.
+```
+$ eros update ios
+```
+update eros android sdk.
+```
+$ eros update android 
+```
+update widget.
+```
+$ eros update all
+```
+update template by path.
+```
+$ eros update template path
 ```
 #### **mock**
 start mock server, you can change default `proxy` and `mockServer` in `eros-template/config/eros.dev.js`.
