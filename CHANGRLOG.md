@@ -1,3 +1,10 @@
+# 2.0.5
+* cli[add]: eros install all 可同时下载两端的 eros-sdk
+* cli[add]: 支持在 init 的时候输入安卓的包名
+* cli[fix]: eros mock 报错问题
+* cli[mod]: eros cli 的帮助日志更新
+* cli[del]: 由于 widget 已提交到 npm 上，目录下不在存在 widget，所以去掉 eros update widget 指令
+
 # 2.0.4
 * fix: eros pack all 失效问题
 * fix: eros pack ios 失效问题
