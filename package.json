@@ -71,6 +71,7 @@
     "webpack": "^3.2.0",
     "weex-loader": "^0.4.5",
     "weex-vue-loader": "^0.4.2",
+    "ws": "^4.0.0",
     "yargs": "4.8.0",
     "zip-folder": "^1.0.0"
   }
