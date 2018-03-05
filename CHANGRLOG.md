@@ -1,3 +1,8 @@
+# 2.0.6
+* [optimize] support weex debug.
+* [feature] add eros run ios.
+
+
 # 2.0.5
 * cli[add]: eros install all 可同时下载两端的 eros-sdk
 * cli[add]: 支持在 init 的时候输入安卓的包名

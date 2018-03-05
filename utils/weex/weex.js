@@ -105,6 +105,34 @@ function addFramework(framework) {
     });
 }
 
+function addAppBoardWhenDev(appBoardPath) {
+    return through.obj(function(file, enc, cb) {
+        if (file.isStream()) {
+            this.emit('error', new gutil.PluginError('gulp-debug', 'Streaming not supported'));
+            return cb();
+        }
+
+        if (!file.contents) {
+            return cb();
+        }
+
+        const filePath = file.history[0]
+        const indexTag = filePath.indexOf(pagesTag) + pagesTag.length
+        const content = file.contents.toString('utf8')
+        const appBoardContent = fs.readFileSync(appBoardPath, 'utf8')
+        const text = appBoardContent + content
+
+        file.contents = new Buffer(text);
+        versionMap.push({
+            page: filePath.slice(indexTag).split(path.sep).join('/'),
+            md5: crypto.createHash('md5').update(text, 'utf8').digest('hex')
+        });
+        cb(null, file);
+    }, function(cb) {
+        cb();
+    });
+}
+
 function getMd5Version() {
     var md5Arr = [];
     versionMap.map(function(item) {
@@ -228,5 +256,6 @@ module.exports = {
     minWeex: minWeex,
     addFramework: addFramework,
     getAssetsMd5: getAssetsMd5,
-    getIconfontMd5: getIconfontMd5
+    getIconfontMd5: getIconfontMd5,
+    addAppBoardWhenDev: addAppBoardWhenDev
 }
