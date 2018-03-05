@@ -1,5 +1,6 @@
 # 2.0.6-beta.1
 * [bugfix] eros pack and eros build generate different zip.
+* [bugfix] eros dev not add app board file.
 
 # 2.0.6
 * [optimize] support weex debug.
