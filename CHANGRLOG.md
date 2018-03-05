@@ -1,3 +1,6 @@
+# 2.0.6-beta.1
+* [bugfix] eros pack and eros build generate different zip.
+
 # 2.0.6
 * [optimize] support weex debug.
 * [feature] add eros run ios.
