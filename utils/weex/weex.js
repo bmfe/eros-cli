@@ -105,6 +105,34 @@ function addFramework(framework) {
     });
 }
 
+function addAppBoardWhenDev(appBoardPath) {
+    return through.obj(function(file, enc, cb) {
+        if (file.isStream()) {
+            this.emit('error', new gutil.PluginError('gulp-debug', 'Streaming not supported'));
+            return cb();
+        }
+
+        if (!file.contents) {
+            return cb();
+        }
+
+        const filePath = file.history[0]
+        const indexTag = filePath.indexOf(pagesTag) + pagesTag.length
+        const content = file.contents.toString('utf8')
+        const appBoardContent = fs.readFileSync(appBoardPath, 'utf8')
+        const text = appBoardContent + content
+
+        file.contents = new Buffer(text);
+        versionMap.push({
+            page: filePath.slice(indexTag).split(path.sep).join('/'),
+            md5: crypto.createHash('md5').update(text, 'utf8').digest('hex')
+        });
+        cb(null, file);
+    }, function(cb) {
+        cb();
+    });
+}
+
 function getMd5Version() {
     var md5Arr = [];
     versionMap.map(function(item) {
@@ -114,62 +142,71 @@ function getMd5Version() {
     return crypto.createHash('md5').update(md5Arr.join(''), 'utf8').digest('hex')
 }
 
-function makeDiffZip(jsVersion) {
-    var zipFolder = readConfig.get('diff').pwd;
+function makeDiffZip({jsVersion, platform}) {
+    return new Promise((resolve) => {
+        var zipFolder = readConfig.get('diff').pwd;
 
-    if (argv.d || argv.diff || argv.s || argv.send) {
-        var targetPath = path.resolve(zipFolder, appName),
-            n = Process.fork(path.resolve(__dirname, './diffFile.js'));
+        if (argv.d || argv.diff || argv.s || argv.send) {
+            var targetPath = path.resolve(zipFolder, appName),
+                n = Process.fork(path.resolve(__dirname, './diffFile.js'));
 
-        if (!exists(targetPath)) {
-            shell.mkdir('-p', targetPath)
-        }
-        n.on('message', function(message) {
-            if (message.type === 'done') {
-                n.kill();
-                shell.cp('dist/js/' + jsVersion + '.zip', targetPath);
-                logger.success('publish success!');
-                logger.sep();
-                logger.log('app name: %s', appName);
-                logger.log('app zip md5: %s', jsVersion);
-                logger.log('zip saved path: %s', targetPath);
+            if (!exists(targetPath)) {
+                shell.mkdir('-p', targetPath)
             }
-        })
-        n.send({
-            jsVersion: jsVersion
-        });
-    }
+            n.on('message', function(message) {
+                if (message.type === 'done') {
+                    n.kill();
+                    shell.cp('dist/js/' + jsVersion + '.zip', targetPath);
+                    logger.success('publish success!');
+                    logger.sep();
+                    logger.log('app name: %s', appName);
+                    logger.log('app zip md5: %s', jsVersion);
+                    logger.log('zip saved path: %s', targetPath);
+                    resolve()
+                }
+            })
+            n.send({
+                jsVersion: jsVersion
+            })
+        }else {
+            resolve({jsVersion, platform})
+        }
+    })
 }
 
-function writeJson(jsVersion) {
-    var requestUrl = argv.s || argv.send,
-        file = path.resolve(process.cwd(), 'dist/version.json'),
-        jsPath = process.cwd() + '/dist/js/',
-        tmpJsPath = process.cwd() + '/dist/_js/';
+function writeJson({jsVersion, platform}) {
+    return new Promise((resolve, reject) => {
+        var requestUrl = argv.s || argv.send,
+            file = path.resolve(process.cwd(), 'dist/version.json'),
+            jsPath = process.cwd() + '/dist/js/',
+            tmpJsPath = process.cwd() + '/dist/_js/';
 
-    shell.mkdir('-p', tmpJsPath);
-    shell.cp('-r', process.cwd() + '/dist/js/**/*.zip', tmpJsPath);
-    shell.rm('-rf', jsPath);
-    fs.rename(tmpJsPath, jsPath);
-    if (requestUrl) {
-        __request.post(requestUrl, {
-            form: versionInfo
-        }, function(error, response, body) {
-            if (!error && response.statusCode == 200) {
-                makeDiffZip(jsVersion);
-            } else {
-                logger.fatal('eros publish fail: %s', error);
-            }
-        });
-    } else {
-        jsonfile.writeFile(file, versionInfo, function(err) {
-            if (err) {
-                logger.fatal('generate eros json error: %s', err);
-            } else {
-                makeDiffZip(jsVersion);
-            }
-        });
-    }
+        shell.mkdir('-p', tmpJsPath);
+        shell.cp('-r', process.cwd() + '/dist/js/**/*.zip', tmpJsPath);
+        shell.rm('-rf', jsPath);
+        fs.rename(tmpJsPath, jsPath);
+        if (requestUrl) {
+            __request.post(requestUrl, {
+                form: versionInfo
+            }, function(error, response, body) {
+                if (!error && response.statusCode == 200) {
+                    resolve({jsVersion, platform});
+                } else {
+                    logger.fatal('eros publish fail: %s', error);
+                    reject('eros publish fail: %s', error)
+                }
+            });
+        } else {
+            jsonfile.writeFile(file, versionInfo, function(err) {
+                if (err) {
+                    logger.fatal('generate eros json error: %s', err);
+                    reject('generate eros json error: %s', err)
+                    return
+                } 
+                resolve({jsVersion, platform});
+            });
+        }
+    })
 }
 
 function minWeex(platform) {
@@ -192,35 +229,56 @@ function minWeex(platform) {
         if (err) {
             logger.fatal('generate eros json error: %s', err);
         } else {
-            weexErosHandler(jsVersion, platform)
-            writeJson(jsVersion);
+            // [bugfix] eros pack and eros build generate different zip.
+            writeJson({jsVersion, platform})
+                .then(makeDiffZip)
+                .then(weexErosHandler)
+                .catch((err) => {
+                  if (err) {
+                    try {
+                      if(err.stderr){
+                        console.log(err.stderr)
+                      }
+                      else{
+                        console.log(err);
+                      }
+                      if(err.output)console.log(err.output.join('\n'))
+                    }catch(e){
+                      console.log(e);
+                    }
+                  }
+                })
         }
-    });
+    })
 }
 
-function weexErosHandler(jsVersion, platform) {
-    var params = {
-        jsZipPath: path.resolve(process.cwd(), './dist/js/' + jsVersion + '.zip'),
-        erosNative: require(path.resolve(process.cwd(), './config/eros.native.js')),
-        bundleConfig: _.assign({
-            filesMd5: versionMap
-        }, versionInfo)
-    }
-    // 加密
-    var _crypt = require('cryptlib'),
-        tmp = JSON.stringify(params.erosNative),
-        iv = 'RjatRGC4W72PJXTE', 
-        key = _crypt.getHashSha256('eros loves you', 32);
+function weexErosHandler({jsVersion, platform}) {
+    return new Promise((resolve) => {
+        var params = {
+            jsZipPath: path.resolve(process.cwd(), './dist/js/' + jsVersion + '.zip'),
+            erosNative: require(path.resolve(process.cwd(), './config/eros.native.js')),
+            bundleConfig: _.assign({
+                filesMd5: versionMap
+            }, versionInfo)
+        }
+        // 加密
+        var _crypt = require('cryptlib'),
+            tmp = JSON.stringify(params.erosNative),
+            iv = 'RjatRGC4W72PJXTE', 
+            key = _crypt.getHashSha256('eros loves you', 32);
 
-	params.erosNative = _crypt.encrypt(tmp, key, iv);
+    	params.erosNative = _crypt.encrypt(tmp, key, iv);
 
-    if (platform === 'ALL') {
-        weexErosPack.packAndroidHandler(params);
-        weexErosPack.packIosHandler(params);
-    }
-    
-    platform === 'IOS' && weexErosPack.packIosHandler(params);
-    platform === 'ANDROID' && weexErosPack.packAndroidHandler(params);
+        if (platform === 'ALL') {
+            weexErosPack.packAndroidHandler(params);
+            weexErosPack.packIosHandler(params);
+        }
+        
+        platform === 'IOS' && weexErosPack.packIosHandler(params);
+        platform === 'ANDROID' && weexErosPack.packAndroidHandler(params);
+
+        resolve()
+    })
 }
 
 
@@ -228,5 +286,6 @@ module.exports = {
     minWeex: minWeex,
     addFramework: addFramework,
     getAssetsMd5: getAssetsMd5,
-    getIconfontMd5: getIconfontMd5
+    getIconfontMd5: getIconfontMd5,
+    addAppBoardWhenDev: addAppBoardWhenDev
 }

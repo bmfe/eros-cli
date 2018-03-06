@@ -1,3 +1,12 @@
+# 2.0.6-beta.1
+* [bugfix] eros pack and eros build generate different zip.
+* [bugfix] eros dev not add app board file.
+
+# 2.0.6
+* [optimize] support weex debug.
+* [feature] add eros run ios.
+
+
 # 2.0.5
 * cli[add]: eros install all 可同时下载两端的 eros-sdk
 * cli[add]: 支持在 init 的时候输入安卓的包名
