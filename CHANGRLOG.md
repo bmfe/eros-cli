@@ -1,4 +1,7 @@
-# 2.0.6-beta.2
+# 2.0.6-beta.4
+* [bugfix] weex-loader down to 0.5.2.
+
+# 2.0.6-beta.2/3
 * [feature] update `weex-loader` to newest，support `recyle-list`.
 * [feature] add socket server, start to develop save auto refresh.
 * [bugfix] eros build -d report wrong info.
