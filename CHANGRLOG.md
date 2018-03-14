@@ -1,3 +1,8 @@
+# 2.0.6-beta.2
+* [feature] update `weex-loader` to newest，support `recyle-list`.
+* [feature] add socket server, start to develop save auto refresh.
+* [bugfix] eros build -d report wrong info.
+
 # 2.0.6-beta.1
 * [bugfix] eros pack and eros build generate different zip.
 * [bugfix] eros dev not add app board file.
