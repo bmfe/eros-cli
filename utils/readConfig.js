@@ -40,6 +40,10 @@ function readAllConfig() {
 
 }
 
+function readNativeConfig() {
+    return require(path.resolve(process.cwd(), './config/eros.native.js'))
+}
+
 function get(key) {
     if (CONFIG && CONFIG[key]) {
         return _.cloneDeep(CONFIG[key]);
@@ -55,5 +59,6 @@ readAllConfig();
 
 module.exports = {
     get: get,
+    readNativeConfig:readNativeConfig,
     getAllConfig: getAllConfig
 }
