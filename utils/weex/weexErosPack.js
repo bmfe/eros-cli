@@ -6,6 +6,16 @@ var fs = require('fs'),
     logger = require('../logger');
 
 
+function _writeJsonToIos(name, data) {
+    const iosZipTarget = path.resolve(process.cwd(), './platforms/' + readConfig.get('localZipFolder').iOS);
+    // jsonfile.writeFileSync(path.resolve(iosZipTarget, 'eros.native.json'), data);
+    jsonfile.writeFileSync(path.resolve(iosZipTarget, name), data);
+}
+function _writeJsonToAndroid(name, data) {
+    const androidZipTarget = path.resolve(process.cwd(), './platforms/' + readConfig.get('localZipFolder').android);
+    // jsonfile.writeFileSync(path.resolve(androidZipTarget, 'eros.native.json'), data);
+    jsonfile.writeFileSync(path.resolve(androidZipTarget, name), data);
+}
 
 function iosHandler(params) {
  var iosZipTarget = path.resolve(process.cwd(), './platforms/' + readConfig.get('localZipFolder').iOS);
@@ -16,11 +26,11 @@ function iosHandler(params) {
     logger.log('copy  -----> bundle.zip');
     shell.cp('-r' , params.jsZipPath, iosZipTarget + '/bundle.zip');
 
-    logger.log('write -----> eros.native.json');
-    jsonfile.writeFileSync(path.resolve(iosZipTarget, 'eros.native.json'), params.erosNative);
+    // logger.log('write -----> eros.native.json');
+    // _writeJsonToIos('eros.native.json', params.erosNative);
 
     logger.log('write -----> bundle.config');
-    jsonfile.writeFileSync(path.resolve(iosZipTarget, 'bundle.config'), params.bundleConfig);
+    _writeJsonToIos('bundle.config', params.bundleConfig);
 
     logger.sep();
     logger.success('packing success!'.green);
@@ -54,16 +64,21 @@ GETTUI_APPSECRET=${erosNativeJs.getui.appSecret}
 
     logger.log('copy  -----> bundle.zip');
     shell.cp('-r' , params.jsZipPath, androidZipTarget + '/bundle.zip');
-    logger.log('write -----> eros.native.json');
-    jsonfile.writeFileSync(path.resolve(androidZipTarget, 'eros.native.json'), params.erosNative);     
+
+    // _packJsonToAndroid('eros.native.json', params.erosNative);
+    // _writeJsonToAndroid(params.erosNative)
+
     logger.log('write -----> bundle.config');
-    jsonfile.writeFileSync(path.resolve(androidZipTarget, 'bundle.config'), params.bundleConfig);     
+    _writeJsonToAndroid('bundle.config', params.bundleConfig);
+
     logger.sep();
     logger.success('packing success!'.green);
     logger.log('android bundle zip has packing to: ' +  androidZipTarget);
 }
 
 module.exports = {
+    _writeJsonToIos: _writeJsonToIos,
+    _writeJsonToAndroid: _writeJsonToAndroid,
     packIosHandler: iosHandler,
     packAndroidHandler: androidHandler
 }
