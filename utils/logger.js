@@ -22,6 +22,17 @@ exports.log = function(...args) {
 }
 
 /**
+ * Warning a `message` to the console.
+ *
+ * @param {String} message
+ */
+
+exports.warning = function(...args) {
+    const msg = format.apply(format, args)
+    console.log('[' + chalk.blue(prefix) + ']', sep, chalk.yellow(msg))
+}
+
+/**
  * Log an error `message` to the console and exit.
  *
  * @param {String} message

@@ -265,14 +265,7 @@ function weexErosHandler({jsVersion, platform}) {
                 filesMd5: versionMap
             }, versionInfo)
         }
-        // 加密
-        var _crypt = require('cryptlib'),
-            tmp = JSON.stringify(params.erosNative),
-            iv = 'RjatRGC4W72PJXTE', 
-            key = _crypt.getHashSha256('eros loves you', 32);
-
-    	params.erosNative = _crypt.encrypt(tmp, key, iv);
-
+    	// params.erosNative = _encrypt(params.erosNative)
         if (platform === 'ALL') {
             weexErosPack.packAndroidHandler(params);
             weexErosPack.packIosHandler(params);
@@ -285,8 +278,19 @@ function weexErosHandler({jsVersion, platform}) {
     })
 }
 
+// 加密
+function _encrypt(data) {
+    let _crypt = require('cryptlib'),
+        tmp = JSON.stringify(data),
+        iv = 'RjatRGC4W72PJXTE', 
+        key = _crypt.getHashSha256('eros loves you', 32)
+
+    return _crypt.encrypt(tmp, key, iv)  
+}
+
 
 module.exports = {
+    _encrypt: _encrypt,
     minWeex: minWeex,
     addFramework: addFramework,
     getAssetsMd5: getAssetsMd5,

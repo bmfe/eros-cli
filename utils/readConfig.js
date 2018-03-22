@@ -25,6 +25,7 @@ function readAllConfig() {
         CONFIG = _.assign({
             weex: true,
             appName: erosConfig.appName,
+            hotRefresh: erosConfig.hotRefresh,
             appBoard: erosConfig.appBoard,
             localZipFolder: erosConfig.zipFolder,
             version: erosConfig.version,
@@ -38,6 +39,10 @@ function readAllConfig() {
         CONFIG = require(configPath);
     }
 
+}
+
+function readNativeConfig() {
+    return require(path.resolve(process.cwd(), './config/eros.native.js'))
 }
 
 function get(key) {
@@ -55,5 +60,6 @@ readAllConfig();
 
 module.exports = {
     get: get,
+    readNativeConfig:readNativeConfig,
     getAllConfig: getAllConfig
 }
