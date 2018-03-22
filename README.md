@@ -118,10 +118,6 @@ update eros android sdk.
 ```
 $ eros update android 
 ```
-update widget.
-```
-$ eros update all
-```
 update template by path.
 ```
 $ eros update template path
@@ -131,3 +127,12 @@ start mock server, you can change default `proxy` and `mockServer` in `eros-temp
 ```
 $ eros mock
 ```
+
+## Develop & Test
+
+* cd eros-template or eros init project `parent directory`.
+* git clone https://github.com/bmfe/eros-cli
+* cd eros-cli && git checkout dev
+* npm/cnpm i
+* cd eros-template or eros init project
+* node ../eros-cli/bin/eros.js + command

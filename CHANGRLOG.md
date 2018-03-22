@@ -1,3 +1,15 @@
+# 2.0.7-beta.1
+* [feature] add socketServer.
+* [optimize] change babel to happypack.
+
+# 2.0.6-beta.4
+* [bugfix] weex-loader down to 0.5.2.
+
+# 2.0.6-beta.2/3
+* [feature] update `weex-loader` to newest，support `recyle-list`.
+* [feature] add socket server, start to develop save auto refresh.
+* [bugfix] eros build -d report wrong info.
+
 # 2.0.6-beta.1
 * [bugfix] eros pack and eros build generate different zip.
 * [bugfix] eros dev not add app board file.
