@@ -1,3 +1,7 @@
+# 2.0.7-beta.1
+* [feature] add socketServer.
+* [optimize] change babel to happypack.
+
 # 2.0.6-beta.4
 * [bugfix] weex-loader down to 0.5.2.
 
