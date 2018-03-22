@@ -1,3 +1,9 @@
+# 2.0.7-beta.3
+* [bugfix] ip.txt send to template.
+
+# 2.0.7-beta.2
+* [bugfix] gulp in not deined.
+
 # 2.0.7-beta.1
 * [feature] add socketServer.
 * [optimize] change babel to happypack.
