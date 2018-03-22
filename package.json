@@ -70,12 +70,16 @@
     "stylus": "^0.54.5",
     "stylus-loader": "^3.0.1",
     "through2": "2.0.1",
-    "vue-loader": "^13.0.1",
-    "vue-template-compiler": "^2.3.4",
-    "webpack": "^3.2.0",
     "weex-loader": "^0.7.2",
     "ws": "^4.0.0",
     "yargs": "4.8.0",
-    "zip-folder": "^1.0.0"
+    "zip-folder": "^1.0.0",
+    "happypack": "^4.0.0",
+    "os": "^0.1.1",
+    "postcss-loader": "^2.0.10",
+    "postcss-plugin-px2rem": "^0.7.0",
+    "postcss-plugin-weex": "^0.1.6",
+    "postcss-px2rem": "^0.3.0",
+    "webpack": "^3.2.0"
   }
 }
