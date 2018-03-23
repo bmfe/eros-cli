@@ -142,7 +142,7 @@ function getMd5Version() {
     return crypto.createHash('md5').update(md5Arr.join(''), 'utf8').digest('hex')
 }
 
-function makeDiffZip({jsVersion, platform}) {
+function makeDiffZip({ jsVersion, platform }) {
     return new Promise((resolve) => {
         var zipFolder = readConfig.get('diff').pwd;
 
@@ -162,19 +162,19 @@ function makeDiffZip({jsVersion, platform}) {
                     logger.log('app name: %s', appName);
                     logger.log('app zip md5: %s', jsVersion);
                     logger.log('zip saved path: %s', targetPath);
-                    resolve({jsVersion, platform})
+                    resolve({ jsVersion, platform })
                 }
             })
             n.send({
                 jsVersion: jsVersion
             })
-        }else {
-            resolve({jsVersion, platform})
+        } else {
+            resolve({ jsVersion, platform })
         }
     })
 }
 
-function writeJson({jsVersion, platform}) {
+function writeJson({ jsVersion, platform }) {
     return new Promise((resolve, reject) => {
         var requestUrl = argv.s || argv.send,
             file = path.resolve(process.cwd(), 'dist/version.json'),
@@ -190,7 +190,7 @@ function writeJson({jsVersion, platform}) {
                 form: versionInfo
             }, function(error, response, body) {
                 if (!error && response.statusCode == 200) {
-                    resolve({jsVersion, platform});
+                    resolve({ jsVersion, platform });
                 } else {
                     logger.fatal('eros publish fail: %s', error);
                     reject('eros publish fail: %s', error)
@@ -202,22 +202,22 @@ function writeJson({jsVersion, platform}) {
                     logger.fatal('generate eros json error: %s', err);
                     reject('generate eros json error: %s', err)
                     return
-                } 
-                resolve({jsVersion, platform});
+                }
+                resolve({ jsVersion, platform });
             });
         }
     })
 }
 
-function generateZip({jsVersion, platform}) {
+function generateZip({ jsVersion, platform }) {
     return new Promise((resolve, reject) => {
         zipFolder(path.resolve(process.cwd(), 'dist/js/_pages/'), path.resolve(process.cwd(), 'dist/js/' + jsVersion + '.zip'), (err) => {
             if (err) {
                 logger.fatal('generate eros json error: %s', err);
                 reject(e)
-            } else { 
-                resolve({jsVersion, platform})
-            }      
+            } else {
+                resolve({ jsVersion, platform })
+            }
         })
     })
 }
@@ -235,28 +235,28 @@ function minWeex(platform) {
     jsonfile.writeFile(md5File, _.assign({
         filesMd5: versionMap
     }, versionInfo), (e) => {
-        generateZip({jsVersion, platform})
+        generateZip({ jsVersion, platform })
             .then(writeJson)
             .then(makeDiffZip)
             .then(weexErosHandler)
             .catch((err) => {
-              if (err) {
-                try {
-                    if(err.stderr){
-                    console.log(err.stderr)
-                    }else{
-                    console.log(err);
+                if (err) {
+                    try {
+                        if (err.stderr) {
+                            console.log(err.stderr)
+                        } else {
+                            console.log(err);
+                        }
+                        if (err.output) console.log(err.output.join('\n'))
+                    } catch (e) {
+                        console.log(e);
                     }
-                    if(err.output)console.log(err.output.join('\n'))
-                } catch(e) {
-                    console.log(e);
                 }
-              }
             })
     })
 }
 
-function weexErosHandler({jsVersion, platform}) {
+function weexErosHandler({ jsVersion, platform }) {
     return new Promise((resolve) => {
         var params = {
             jsZipPath: path.resolve(process.cwd(), './dist/js/' + jsVersion + '.zip'),
@@ -265,12 +265,12 @@ function weexErosHandler({jsVersion, platform}) {
                 filesMd5: versionMap
             }, versionInfo)
         }
-    	// params.erosNative = _encrypt(params.erosNative)
+        // params.erosNative = _encrypt(params.erosNative)
         if (platform === 'ALL') {
             weexErosPack.packAndroidHandler(params);
             weexErosPack.packIosHandler(params);
         }
-        
+
         platform === 'IOS' && weexErosPack.packIosHandler(params);
         platform === 'ANDROID' && weexErosPack.packAndroidHandler(params);
 
@@ -282,10 +282,10 @@ function weexErosHandler({jsVersion, platform}) {
 function _encrypt(data) {
     let _crypt = require('cryptlib'),
         tmp = JSON.stringify(data),
-        iv = 'RjatRGC4W72PJXTE', 
+        iv = 'RjatRGC4W72PJXTE',
         key = _crypt.getHashSha256('eros loves you', 32)
 
-    return _crypt.encrypt(tmp, key, iv)  
+    return _crypt.encrypt(tmp, key, iv)
 }
 
 
