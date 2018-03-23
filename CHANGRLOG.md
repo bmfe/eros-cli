@@ -1,4 +1,8 @@
-# 2.0.7-beta.1
+# 2.0.7-beta
+* [bugfix] ip.txt send to template.
+* [bugfix] newPack.config.js -> newpack.config.js.
+* [bugfix] gulp in not deined.
+* [bugfix] cannot find module.
 * [feature] add socketServer.
 * [optimize] change babel to happypack.
 
