@@ -3,6 +3,7 @@
 * [bugfix] newPack.config.js -> newpack.config.js.
 * [bugfix] gulp in not deined.
 * [bugfix] cannot find module.
+* [bugfix] sass less stylus not effect.
 * [feature] add socketServer.
 * [optimize] change babel to happypack.
 
