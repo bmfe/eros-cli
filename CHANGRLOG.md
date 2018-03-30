@@ -5,6 +5,7 @@
 * [bugfix] cannot find module.
 * [bugfix] sass less stylus not effect.
 * [feature] add socketServer.
+* [feature] add `$ eros config reload`.
 * [optimize] change babel to happypack.
 
 # 2.0.6-beta.4
