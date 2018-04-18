@@ -55,7 +55,7 @@ module.exports = function (content) {
   var moduleId = 'data-v-' + genId(filePath)
   var styleRewriter = styleRewriterPath + '?id=' + moduleId
 
-  var isProduction = this.minimize || process.env.NODE_ENV === 'production'
+  var isProduction = this.minimize || process.env.NODE_ENV !== 'development'
 
   var needCssSourceMap =
     !isProduction &&
