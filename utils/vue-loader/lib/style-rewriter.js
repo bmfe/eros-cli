@@ -73,7 +73,7 @@ module.exports = function (css, map) {
     this.sourceMap &&
     !this.minimize &&
     options.cssSourceMap !== false &&
-    process.env.NODE_ENV !== 'production' &&
+    process.env.NODE_ENV === 'development' &&
     !(isObject(postcssOptions) && postcssOptions.options && postcssOptions.map)
   ) {
     opts.map = {

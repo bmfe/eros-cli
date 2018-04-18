@@ -85,7 +85,7 @@ module.exports = function (html) {
   // hot-reload
   if (!isServer &&
       !this.minimize &&
-      process.env.NODE_ENV !== 'production') {
+      process.env.NODE_ENV === 'development') {
     code +=
       '\nif (module.hot) {\n' +
       '  module.hot.accept()\n' +

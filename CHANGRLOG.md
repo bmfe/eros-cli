@@ -7,6 +7,7 @@
 * [feature] add socketServer.
 * [feature] add `$ eros config reload`.
 * [optimize] change babel to happypack.
+* [optimize] make process.env.NODE_ENV customizable.
 
 # 2.0.6-beta.4
 * [bugfix] weex-loader down to 0.5.2.
@@ -98,7 +99,7 @@
 ### func
 * 新增    eros init
 * 新增    eros build
-* 新增    eros dev     
+* 新增    eros dev
 * 新增    eros pack (--ios/android)
 * 新增    eros install (--ios/android)
 

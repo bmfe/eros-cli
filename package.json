@@ -1,6 +1,6 @@
 {
   "name": "eros-cli",
-  "version": "2.0.7-beta.8",
+  "version": "2.0.7-beta.9",
   "description": "A simple CLI for scaffolding weex projects, we provide eros-template to quickly build small and medium sized app.",
   "bin": {
     "eros": "./bin/eros.js"
