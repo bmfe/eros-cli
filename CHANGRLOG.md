@@ -1,4 +1,6 @@
-# 2.0.7-beta
+# 2.0.7
+* [remove] eros install.
+* [remove] eros update ios/android (eros update tempate still in there).
 * [bugfix] ip.txt send to template.
 * [bugfix] newPack.config.js -> newpack.config.js.
 * [bugfix] gulp in not deined.
@@ -6,6 +8,7 @@
 * [bugfix] sass less stylus not effect.
 * [feature] add socketServer.
 * [feature] add `$ eros config reload`.
+* [feature] eros init support choose pure template.
 * [optimize] change babel to happypack.
 * [optimize] make process.env.NODE_ENV customizable.
 
