@@ -1,3 +1,6 @@
+# 2.0.8-beta
+* [bugfix] remove eros pack android umeng appid.
+
 # 2.0.7
 * [remove] eros install.
 * [remove] eros update ios/android (eros update tempate still in there).

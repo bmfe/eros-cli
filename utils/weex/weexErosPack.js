@@ -54,7 +54,6 @@ function androidHandler(params) {
 
     let info = `
 #start
-UMENG_APPKEY=${erosNativeJs.umeng.androidAppKey}
 GETUI_APPID=${erosNativeJs.getui.appId}
 GETUI_APPKEY=${erosNativeJs.getui.appKey}
 GETTUI_APPSECRET=${erosNativeJs.getui.appSecret}
