@@ -180,7 +180,6 @@ function writeJson({ jsVersion, platform }) {
             file = path.resolve(process.cwd(), 'dist/version.json'),
             jsPath = process.cwd() + '/dist/js/',
             tmpJsPath = process.cwd() + '/dist/_js/';
-
         shell.mkdir('-p', tmpJsPath);
         shell.cp('-r', process.cwd() + '/dist/js/**/*.zip', tmpJsPath);
         shell.rm('-rf', jsPath);
