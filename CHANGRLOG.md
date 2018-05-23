@@ -1,5 +1,6 @@
 # 2.0.8-beta
 * [bugfix] remove eros pack android umeng appid.
+* [bugfix] jsServer undefined when packing inner zip.
 
 # 2.0.7
 * [remove] eros install.
@@ -103,18 +104,15 @@
 
 # 2.0.0-beta.1
 ### func
-* 新增    eros init
-* 新增    eros build
-* 新增    eros dev
-* 新增    eros pack (--ios/android)
-* 新增    eros install (--ios/android)
-
-### bugfix
-* 兼容windows
+* add eros init
+* add eros build
+* add eros dev
+* add eros pack (--ios/android)
+* add eros install (--ios/android)
+* 兼容 windows
 * minWeex 打包问题
 * 打包js的时候 混淆会顺便删除map文件减少体积
 * iconfont 打包路径问题
 * 修改 eros NODE_env 搭配修复eros debug问题
-* 支持stylus
 * fix diff bug
 * build assets 时候多调用了打 iconfont md5 方法
