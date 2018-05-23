@@ -67,7 +67,7 @@ generate [eros-template](https://github.com/bmfe/eros-template) in current execu
 ```
 $ eros init
 ```
-#### **install**
+#### **~install~** (abandon)
 
 eros developed many functions based on weex (self-module), you don't have to worry about the version of the weex update, we will update weex in time, every time we have a change ( new module / bugfix / weex update and so on), you can install them to use it.
 ```
