@@ -39,7 +39,7 @@ function iosHandler(params) {
 
 function androidHandler(params) {
  var androidZipTarget = path.resolve(process.cwd(), './platforms/' + readConfig.get('localZipFolder').android),
-     gradlePropertiesPath = path.resolve(process.cwd(), './platforms/android/WeexFrameworkWrapper/gradle.properties'),
+     gradlePropertiesPath = path.resolve(process.cwd(), './platforms/' + readConfig.get('localZipFolder').android + '/../../../../gradle.properties'),
      erosNativeJs = readConfig.get('erosNativeJs');
 
     logger.sep(); 
