@@ -1,4 +1,6 @@
 # 2.0.8-beta
+* [bugfix] android zip path logic.
+* [bugfix] fs.rename need a callback.
 * [bugfix] remove eros pack android umeng appid.
 * [bugfix] jsServer undefined when packing inner zip.
 

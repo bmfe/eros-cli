@@ -183,28 +183,30 @@ function writeJson({ jsVersion, platform }) {
         shell.mkdir('-p', tmpJsPath);
         shell.cp('-r', process.cwd() + '/dist/js/**/*.zip', tmpJsPath);
         shell.rm('-rf', jsPath);
-        fs.rename(tmpJsPath, jsPath);
-        if (requestUrl) {
-            __request.post(requestUrl, {
-                form: versionInfo
-            }, function(error, response, body) {
-                if (!error && response.statusCode == 200) {
+        fs.rename(tmpJsPath, jsPath, (err) => {
+             if(err) throw err;
+            if (requestUrl) {
+                __request.post(requestUrl, {
+                    form: versionInfo
+                }, function(error, response, body) {
+                    if (!error && response.statusCode == 200) {
+                        resolve({ jsVersion, platform });
+                    } else {
+                        logger.fatal('eros publish fail: %s', error);
+                        reject('eros publish fail: %s', error)
+                    }
+                });
+            } else {
+                jsonfile.writeFile(file, versionInfo, function(err) {
+                    if (err) {
+                        logger.fatal('generate eros json error: %s', err);
+                        reject('generate eros json error: %s', err)
+                        return
+                    }
                     resolve({ jsVersion, platform });
-                } else {
-                    logger.fatal('eros publish fail: %s', error);
-                    reject('eros publish fail: %s', error)
-                }
-            });
-        } else {
-            jsonfile.writeFile(file, versionInfo, function(err) {
-                if (err) {
-                    logger.fatal('generate eros json error: %s', err);
-                    reject('generate eros json error: %s', err)
-                    return
-                }
-                resolve({ jsVersion, platform });
-            });
-        }
+                });
+            }
+        });
     })
 }
 
