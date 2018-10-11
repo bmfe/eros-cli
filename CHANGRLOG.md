@@ -1,3 +1,6 @@
+# 2.0.9
+* [change] android  com.benmu.wx to com.eros.wx.
+
 # 2.0.8-beta
 * [bugfix] android zip path logic.
 * [bugfix] fs.rename need a callback.
